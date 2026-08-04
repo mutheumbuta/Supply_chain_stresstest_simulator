@@ -1,37 +1,10 @@
-"""
-Department-level CPI demand elasticity and import-price COGS exposure.
 
-Operates on the CLEANED dataset -- snake_case column names throughout
-(order_date, department_name, order_item_quantity, product_card_id),
-matching data/dataco_clean.parquet, not the raw CSV's title-case headers.
-
------------------------------------------------------------------------
-METHOD
------------------------------------------------------------------------
-1. PRIORS: documented, economically-reasoned starting values per
-   department (discretionary/durable/imported goods = more elastic,
-   more import-exposed; staples/domestic = less of both). These are
-   assumptions, clearly labeled as such -- not fitted.
-
-2. ESTIMATION: aggregate monthly order volume per department, align to
-   a REAL historical CPI series (BLS CPI-U, Jan 2015 - Jan 2018 -- see
-   historical_cpi_series() docstring) matching this dataset's order
-   dates, and fit a log-log OLS slope per department, controlling for
-   a linear time trend.
-
-3. SHRINKAGE: blend the estimated slope with the prior, weighted by
-   sample size (empirical-Bayes style): weight_on_data = n_months / (n_months + K).
-   Small-n departments trust the prior almost entirely; large-n
-   departments let the data speak more.
-
------------------------------------------------------------------------
-"""
 from __future__ import annotations
 
 import numpy as np
 import pandas as pd
 
-# --- 1. PRIORS -----------------------------------------------------
+
 DEPARTMENT_PRIORS = {
     "Technology":         {"demand_elasticity": -0.60, "import_exposure": 0.85},
     "Golf":                {"demand_elasticity": -0.60, "import_exposure": 0.55},

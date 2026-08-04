@@ -1,27 +1,5 @@
-"""
-Import Price Index -> Cost of Goods Sold (COGS) and margin impact model.
 
------------------------------------------------------------------------
-COST MODEL — documented assumptions (same philosophy as optimizer.py)
------------------------------------------------------------------------
-The dataset has no COGS field directly, but it does have order_item_total
-(revenue) and order_profit_per_order (realized profit), so we can back
-into an implied COGS per order and then flex it under an import price
-shock:
 
-    implied_cogs        = order_item_total - order_profit_per_order
-    shocked_cogs         = implied_cogs * (1 + IMPORT_EXPOSURE * pct_import_price_change)
-    shocked_profit        = order_item_total - shocked_cogs
-
-IMPORT_EXPOSURE (default 0.6) represents the share of COGS assumed to
-be import-price-sensitive (sourced/imported inputs) vs. domestic/fixed
-cost. This is an assumption, not fitted -- adjust it in the sidebar or
-here for different sourcing-mix scenarios.
-
-Operates on the cleaned dataset (see src/clean_data.py) -- snake_case
-column names throughout.
------------------------------------------------------------------------
-"""
 from __future__ import annotations
 
 import pandas as pd

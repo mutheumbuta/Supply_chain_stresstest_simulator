@@ -1,12 +1,4 @@
-"""
-Macro-Resilient Supply Chain & Inventory Optimizer
-Run with: streamlit run app.py
 
-Built around three macro indicators, each a distinct transmission channel:
-  1. GASDESW (diesel price)        -> operational/freight cost
-  2. IR (Import Price Index)        -> cost of goods sold / margin
-  3. CPIAUCSL (CPI)                  -> consumer demand elasticity
-"""
 import os
 import sys
 

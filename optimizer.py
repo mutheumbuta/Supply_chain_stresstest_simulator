@@ -1,34 +1,4 @@
-"""
-LP optimizer: for each (market, order_region) lane, choose the
-cost-minimizing shipping_mode, subject to a maximum allowed average lead
-time (service-level constraint), under a macro-shocked freight cost model.
 
------------------------------------------------------------------------
-COST MODEL — IMPORTANT, READ THIS
------------------------------------------------------------------------
-The DataCo dataset has no freight-cost, weight, or distance column, so
-there is no ground-truth shipping cost to optimize against directly.
-Instead we build an explicit, documented cost model:
-
-    lane_mode_cost = base_rate[mode] * volume_factor(lane) * diesel_elasticity
-
-  - base_rate[mode]: an assumed $/order base cost, ordered the way real
-    carriers price expedited service (Same Day > First Class > Second
-    Class > Standard Class).
-  - volume_factor(lane): scales cost by the lane's historical average
-    order value, as a rough proxy for shipment size/weight.
-  - diesel_elasticity: 1 + ELASTICITY * pct_diesel_change, applied
-    per-mode with different sensitivity (ground modes are more
-    diesel-exposed than express air, which is more insulated but off a
-    higher base).
-
-This is a transparent, adjustable assumption set -- not a fitted model.
-Swap in real carrier rate cards / weight data for production use.
-
-Operates on the cleaned dataset (see src/clean_data.py) -- snake_case
-column names throughout.
------------------------------------------------------------------------
-"""
 from __future__ import annotations
 
 import pandas as pd
