@@ -6,7 +6,7 @@ diesel price spikes, import price inflation, and consumer inflation
 DataCo dataset) and change three concrete business decisions: shipping
 mode selection, profit margin, and inventory safety stock levels.
 
-📄 See `GLOBAL_TRADE_INTRODUCTION.md` for the global trade context this
+See `GLOBAL_TRADE_INTRODUCTION.md` for the global trade context this
 project responds to, and how the project's own data sits inside it.
 
 ---
