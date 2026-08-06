@@ -18,7 +18,7 @@ from fred_client import fetch_all_macro, latest_value
 
 st.set_page_config(page_title="Supply Chain Stress Test Simulator", layout="wide")
 
-DATA_PATH = os.path.join(os.path.dirname(__file__), "data", "dataco_clean.csv")
+DATA_PATH = os.path.join(os.path.dirname(__file__), "data", "DataCoSupplyChainDataset_clean.csv")
 
 
 @st.cache_data
@@ -48,7 +48,7 @@ def precompute_base_stats(df: pd.DataFrame):
 df = load_data()
 lanes, lt_stats, demand_stats, elasticity_table = precompute_base_stats(df)
 
-st.title("📦 Supply Chain Stress Test Simulator")
+st.title("Supply Chain Stress Test Simulator")
 st.caption(
     "Three macro shocks, three distinct channels into the supply chain: diesel price -> freight cost, "
     "import price index -> cost of goods, CPI -> demand. Built on the DataCo Supply Chain dataset (180K+ orders)."
@@ -303,3 +303,4 @@ st.caption(
     "data when no API key/network is available. Freight cost and COGS models are documented assumption "
     "sets, not fitted to real carrier rates or supplier costs."
 )
+
