@@ -8,14 +8,16 @@ decisions: which shipping mode to use, how much profit margin survives,
 and how much inventory to hold.
 
 For the global trade context that got me thinking about this in the
-first place, see `Global_trade_context_intro.md`.
+first place, see `Global_trade_context_intro.md`. For a full,
+explanatory walkthrough of how everything fits together, see
+`project_walkthrough.ipynb`.
 
 ## Project Files (Google Drive)
 
 **https://drive.google.com/drive/folders/194_fSkCtJigzi8pu_f4qRewF7_NljmXJ?usp=drive_link**
 
-
 ## Project Goals
+
 The question I actually wanted to answer: **when a macroeconomic shock
 hits — a diesel price spike, an import cost surge, a burst of inflation —
 what should a supply chain actually *do* differently?** Most of the
@@ -62,13 +64,15 @@ streamlit run app.py
 ```
 
 No database, no parquet, nothing else to set up — `app.py` reads
-`data/dataco_clean.csv` directly. I added a free
+`data/DataCoSupplyChainDataset_clean.csv` directly. I added a free
 [FRED API key](https://fred.stlouisfed.org/docs/api/api_key.html) field
 in the sidebar for live macro data; without one, it runs on fallback
 data that's clearly labeled as such.
 
-If I want to regenerate `data/dataco_clean.csv` from the raw dataset, I
-just run all cells in `notebooks/cleaning.ipynb`.
+If I want to regenerate the cleaned CSV from the raw dataset, I run all
+cells in `cleaning.ipynb` (top to bottom — the order of the cells
+matters, since the whitespace-cleaning step has to run before the
+column-renaming step).
 
 ---
 
@@ -143,10 +147,10 @@ below.
 
 ## Cleaning Steps — What I Did, and Why
 
-I did the cleaning in `notebooks/cleaning.ipynb`, which turns the raw CSV
-into `data/dataco_clean.csv`. Every step below is something I checked
-against the actual data first — I didn't want to clean things that
-didn't need cleaning, or miss things that did.
+I did the cleaning in `cleaning.ipynb`, which turns the raw CSV into
+`data/DataCoSupplyChainDataset_clean.csv`. Every step below is something
+I checked against the actual data first — I didn't want to clean things
+that didn't need cleaning, or miss things that did.
 
 ### 1. I dropped 15 columns, in four categories
 
@@ -186,17 +190,30 @@ and Beauty" department's prior was never matching because of the
 whitespace mismatch, and it was silently falling back to a generic
 default every time.
 
-### 3. I converted the date columns from text to real datetime
+**Order matters here:** this step has to run on the *original*
+title-case column names (`'Order Region'`, not `'order_region'`),
+*before* the renaming step below — running it after, or with the wrong
+names, either silently does nothing or throws a `KeyError`. I've had
+this bite me before by getting the cell order wrong.
 
-`order_date` and `shipping_date` came in as plain text strings. I convert
-them once here with `pd.to_datetime()` so I'm not re-parsing them on
-every downstream calculation. One thing worth noting: since I ended up
-using CSV instead of parquet for the cleaned output, `app.py` has to
-re-parse these two columns back to datetime every time it loads the
-file — CSV doesn't remember column types the way parquet does. Small
-tradeoff I accepted for simplicity.
+### 3. I converted the date columns from text to real datetime, and gave them their final names
 
-### 4. I renamed everything to snake_case
+`order_date` and `shipping_date` came in as plain text strings, and the
+mechanical rename to snake_case alone leaves them named
+`order_date_dateorders` / `shipping_date_dateorders` (the raw CSV headers
+have "(DateOrders)" baked in). I convert them to real datetime **and**
+rename them to their short final names in the same step — skipping the
+rename is an easy, easy-to-miss mistake, since the column technically
+exists, just under the longer name, and `app.py` will fail with
+`KeyError: 'order_date'` if this step is left out.
+
+One other thing worth noting: since I ended up using CSV instead of
+parquet for the cleaned output, `app.py` has to re-parse these two
+columns back to datetime every time it loads the file — CSV doesn't
+remember column types the way parquet does. Small tradeoff I accepted
+for simplicity.
+
+### 4. I renamed everything else to snake_case
 
 The raw CSV headers are a mix of spacing, casing, and parenthetical
 suffixes (`order date (DateOrders)`, `Days for shipping (real)`). I
@@ -238,8 +255,11 @@ treating that as a real, useful finding rather than something to hide —
 it means the significance gate I built is actually doing its job, not
 just rubber-stamping every guess as "data-driven."
 
+---
 
-## Project Structure
+## How It's Organized
+
+Everything lives flat in one project folder, except the data file:
 
 ```
 ├── app.py                       # Streamlit dashboard (entry point)
@@ -249,17 +269,29 @@ just rubber-stamping every guess as "data-driven."
 ├── elasticity_model.py            # CPI demand elasticity, per-department + tested
 ├── fred_client.py                  # FRED + NY Fed GSCPI client, with offline fallback
 ├── data/
-│   └── DatacosupplyChainDataset_clean.csv            # Cleaned dataset (38 cols, snake_case)
-│    cleaning.ipynb               # Raw CSV -> cleaned CSV, narrated
-│   
-├── GLOBAL_TRADE_INTRODUCTION.md       # Global trade context + project relevan
-└── requirements.txt
+│   └── DataCoSupplyChainDataset_clean.csv   # Cleaned dataset (38 cols, snake_case)
+├── cleaning.ipynb                  # Raw CSV -> cleaned CSV, narrated
+├── project_walkthrough.ipynb       # Deep, explanatory walkthrough of the whole project
+├── Global_trade_context_intro.md   # Global trade context + why I built this
+├── world_trade_growth_intro.png    # Chart used in Global_trade_context_intro.md
+├── growth_vs_exposure_bars.png     # Chart used in Global_trade_context_intro.md
+├── requirements.txt
+└── .gitignore                       # NOT the venv-generated one -- see note below
 ```
 
-## Deliverables
+**A note on `.gitignore`:** if you ever see a file whose only content is
+`*` with a comment about being "Created by venv" — that's the
+auto-generated gitignore *inside* a venv folder (correctly tells git to
+ignore the whole venv directory). It is not a project-level `.gitignore`
+and should never be used as one — using it that way would tell git to
+ignore literally everything in the repo.
 
-- Interactive Streamlit dashboard (`app.py`)
-- Jupyter notebook walkthrough (`notebooks/`)
+## What I'm Handing Over
+
+- The interactive Streamlit dashboard (`app.py`)
+- Two Jupyter notebooks — one for the cleaning process
+  (`cleaning.ipynb`), one as a full, deep walkthrough of the project's
+  reasoning (`project_walkthrough.ipynb`)
 
 ## License
 
