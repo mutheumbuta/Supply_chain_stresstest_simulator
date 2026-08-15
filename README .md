@@ -12,6 +12,11 @@ first place, see `Global_trade_context_intro.md`. For a full,
 explanatory walkthrough of how everything fits together, see
 `project_walkthrough.ipynb`.
 
+## Live Demo
+
+📹 [Watch the demo](./Screen_Recording_2026-08-12_195342.mp4) — moving
+the diesel price slider and watching the freight cost recompute live.
+
 ## Project Files (Google Drive)
 
 **https://drive.google.com/drive/folders/194_fSkCtJigzi8pu_f4qRewF7_NljmXJ?usp=drive_link**
