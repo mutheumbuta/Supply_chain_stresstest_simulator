@@ -10,11 +10,10 @@ import requests
 FRED_BASE = "https://api.stlouisfed.org/fred/series/observations"
 GSCPI_URL = "https://www.newyorkfed.org/medialibrary/research/interactives/gscpi/downloads/gscpi_data.xls"
 
-# Three primary indicators the app is built around, each representing a
-# distinct transmission channel into the supply chain:
-#   diesel_price          -> operational/freight cost
-#   import_price_index    -> cost of goods sourced internationally (COGS)
-#   cpi                    -> consumer purchasing power / demand elasticity
+# The app is business tool is majorly built on three main indicators:
+#   diesel_price          - operational/freight cost
+#   import_price_index    - cost of goods sourced internationally (COGS)
+#   cpi                    - consumer purchasing power / demand elasticity
 SERIES = {
     "diesel_price": "GASDESW",
     "import_price_index": "IR",
