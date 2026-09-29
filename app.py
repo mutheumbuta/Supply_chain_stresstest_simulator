@@ -24,7 +24,7 @@ DATA_PATH = os.path.join(os.path.dirname(__file__), "data", "DataCoSupplyChainDa
 @st.cache_data
 def load_data():
     df = pd.read_csv(DATA_PATH)
-    # CSV doesn't preserve dtypes -- dates come back as plain strings and
+    # CSV doesn't preserve dtypes  dates come back as plain strings and
     # must be re-parsed, unlike parquet which round-trips them natively.
     df["order_date"] = pd.to_datetime(df["order_date"])
     df["shipping_date"] = pd.to_datetime(df["shipping_date"])
@@ -235,9 +235,8 @@ with st.expander("📐 Department-level elasticity & import exposure (methodolog
 
 st.divider()
 
-# --------------------------------------------------------------------
 # CHANNEL 3: CPI -> Demand elasticity -> Dynamic safety stock
-# --------------------------------------------------------------------
+
 st.subheader("3️⃣ CPI / Inflation → Demand Shift → Dynamic Safety Stock")
 st.caption(
     "Safety stock = Z × √(LT_avg·σ_D² + D_avg²·σ_LT²). CPI shock adjusts D_avg and σ_D (demand) via the "

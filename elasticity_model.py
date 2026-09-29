@@ -4,6 +4,11 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+# this helps us answer the question do be people actually buy ;ess when prices arise and can we prove this theory
+# when inflation rises peeople have less purchasing of luxury goods and more purchasing of goods they need
+# elasticity is a measure of how much demand changes when prices change
+# 
+
 
 DEPARTMENT_PRIORS = {
     "Technology":         {"demand_elasticity": -0.60, "import_exposure": 0.85},
@@ -71,8 +76,9 @@ def estimate_department_elasticities(
 
     cpi = historical_cpi_series()
     # Exclude the truncated tail (Oct 2017 onward) from the regression
-    # window -- order volume roughly halves dataset-wide from that point,
+    # window  order volume roughly halves dataset-wide from that point,
     # a known export artifact, not real demand collapse.
+    
     regression_window_end = pd.Period("2017-09", freq="M")
     monthly = monthly[monthly["month"] <= regression_window_end]
     cpi = cpi[cpi["month"] <= regression_window_end]

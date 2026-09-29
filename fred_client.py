@@ -4,8 +4,16 @@ import os
 import io
 from datetime import date
 
+from h11 import Data
 import pandas as pd
 import requests
+
+#every shock simulated in this app -- diesel
+#prices, import costs, inflation -- needs a real starting point. This
+#file fetches that starting point from FRED (Federal Reserve EconomiData), a free, public U.S. government database. If there's no internet
+#connection or API key available, it doesn't crash -- it switches to
+#clearly labeled placeholder data instead, so the app always keeps
+#working and is always honest about which mode it's in.
 
 FRED_BASE = "https://api.stlouisfed.org/fred/series/observations"
 GSCPI_URL = "https://www.newyorkfed.org/medialibrary/research/interactives/gscpi/downloads/gscpi_data.xls"

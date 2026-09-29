@@ -6,7 +6,8 @@ import pandas as pd
 
 DEFAULT_IMPORT_EXPOSURE = 0.6
 
-
+#if the cost of imported goods goes up and youdon't raise your prices, your profit margin shrinks. This file calculates exactly how much profit is lost and importantly, it figures out your actual product cost using real arithmetic(revenue minus profit), not a guess, since the dataset doesn't recordcost directly.
+# this matters to a business  because it shws which product  lines are bleeding the most so as to know where one should focus like adjusting pricing, negotiatig with suppliers or find alternate sourcing.
 def apply_import_price_shock(
     df: pd.DataFrame,
     pct_import_price_change: float,
